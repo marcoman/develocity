@@ -1,0 +1,11 @@
+/*
+ * This file contains representative examples of how to configure
+ * your build files.
+ */
+
+tasks.named('test', Test) {
+    develocity.testRetry {
+        maxRetries = 3
+        failOnPassedAfterRetry = true
+    }
+}

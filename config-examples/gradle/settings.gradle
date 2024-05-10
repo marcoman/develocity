@@ -1,0 +1,31 @@
+/*
+ */
+
+plugins {
+    id 'com.gradle.develocity' version '3.17.2'
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '1.13'
+}
+
+rootProject.name = 'marco-gradle'
+
+develocity {
+    server = "https://develocity-field.gradle.com"
+    allowUntrustedServer = false
+
+    buildScan {
+        capture { taskInputFiles = true }
+        uploadInBackground = true
+        publishAlways()
+    }
+}
+
+buildCache {
+    local {
+        enabled = true
+    }
+    remote(develocity.buildCache) {
+        enabled = true
+        push = true
+    }
+}
+
