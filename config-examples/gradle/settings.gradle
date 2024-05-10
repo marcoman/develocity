@@ -13,9 +13,7 @@ develocity {
     allowUntrustedServer = false
 
     buildScan {
-        capture { taskInputFiles = true }
         uploadInBackground = true
-        publishAlways()
     }
 }
 
