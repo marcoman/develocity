@@ -7,3 +7,8 @@ In this project, I collect my open-source examles of how I use Develocity, by Gr
     - Gradle
     - Maven
 
+# Disclaimer
+
+The contents of this repository are experiments and are provided AS-IS.  This includes the possibility of errors.
+
+You have been warned.
