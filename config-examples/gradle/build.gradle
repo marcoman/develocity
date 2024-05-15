@@ -3,6 +3,7 @@
  * your build files.
  */
 
+// See the documentation at https://docs.gradle.com/develocity/flaky-test-detection/ for how to configure the following
 tasks.named('test', Test) {
     develocity.testRetry {
         maxRetries = 3

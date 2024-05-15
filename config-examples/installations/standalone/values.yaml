@@ -1,0 +1,31 @@
+global:
+  hostname: <the hostname of your instance>
+
+  unattended:
+    configuration:
+      version: 8
+      systemPassword: <encode this per the instructions at https://docs.gradle.com/develocity/tutorials/aws-standalone/#s3_build_scans>
+      buildScans:
+        storage:
+          incomingStorageType: objectStorage
+      advanced:
+        app:
+          heapMemory: 5632 <this value has to increase per the instructions at https://docs.gradle.com/develocity/tutorials/aws-standalone/#s3_build_scans>
+
+database:
+  type: embedded
+
+ingress:
+  enabled: true
+  ssl:
+    enabled: false
+
+
+
+objectStorage:
+  type: s3
+  s3:
+    bucket: <this is the name of your S3 bucket - name only, not URI, ARN>
+    region: us-east-1
+    credentials:
+      source: environment
