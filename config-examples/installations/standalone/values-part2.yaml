@@ -1,0 +1,15 @@
+global:
+  hostname: <the DNS entry of your instance.  For example, ec2-1-2-3-4.compute-1.amazonaws.com>
+
+  unattended:
+    configuration:
+      version: 8
+      systemPassword: "<Enclose in quotes.  Encode your password per the instructions at https://docs.gradle.com/develocity/tutorials/aws-standalone/#s3_build_scans>"
+
+database:
+  type: embedded
+
+ingress:
+  enabled: true
+  ssl:
+    enabled: false

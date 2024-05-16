@@ -1,5 +1,5 @@
 global:
-  hostname: <the hostname of your instance>
+  hostname: <the DNS entry of your instance.  For example, ec2-1-2-3-4.compute-1.amazonaws.com>
 
   unattended:
     configuration:

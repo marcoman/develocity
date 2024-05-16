@@ -1,0 +1,11 @@
+global:
+  hostname: <the DNS entry of your instance.  For example, ec2-1-2-3-4.compute-1.amazonaws.com>
+
+
+database:
+  type: embedded
+
+ingress:
+  enabled: true
+  ssl:
+    enabled: false
