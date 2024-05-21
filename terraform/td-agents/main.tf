@@ -12,7 +12,8 @@ data "aws_ami" "amazon2" {
     most_recent = true
     filter {
         name = "name"
-        values = ["amzn2-ami-hvm-*-x86_64-ebs"]
+        # values = ["amzn2-ami-hvm-*-x86_64-ebs"]
+        values = ["al2023-ami-2023-*-x86_64"]
     }
     owners = ["amazon"]
 }
@@ -39,16 +40,24 @@ resource "aws_instance" "td_agents" {
 
     root_block_device {
       encrypted = true
+      volume_size = 20
     }
 
     user_data = <<-EOF
     #!/bin/bash
     yum update -y
     echo "Hello world!"
-    yum -y install java-21-amazon-corretto-devel
+    yum -y install java-17-amazon-corretto-devel
+    # Java 21 is not available for AWS Linux 2.
+    # yum -y install java-21-amazon-corretto-devel
     wget https://docs.gradle.com/develocity/test-distribution-agent/develocity-jar/develocity-test-distribution-agent-3.0.1.jar -O td-agent.jar
     chown ec2-user td-agent.jar
-    mv td-agent.jar /homne/ec2-user
+    mv td-agent.jar /home/ec2-user
+    java -Xms64m -Xmx64m -XX:MaxMetaspaceSize=64m \
+    -jar /home/ec2-user/td-agent.jar \
+    --server https://«develocity-hostname» \
+    --registration-key «registration-key» 
+    --pool «pool-id»
     EOF
 
     tags = merge (
