@@ -49,7 +49,7 @@ resource "aws_instance" "td_agents" {
     echo "Hello world!"
     yum -y install java-17-amazon-corretto-devel
     # Java 21 is not available for AWS Linux 2.
-    # yum -y install java-21-amazon-corretto-devel
+    yum -y install java-21-amazon-corretto-devel
     wget https://docs.gradle.com/develocity/test-distribution-agent/develocity-jar/develocity-test-distribution-agent-3.0.1.jar -O td-agent.jar
     chown ec2-user td-agent.jar
     mv td-agent.jar /home/ec2-user
