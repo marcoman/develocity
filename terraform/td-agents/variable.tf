@@ -4,12 +4,6 @@ variable "aws-profile" {
     default = null
 }
 
-variable "td-ami" {
-    description = "The ami for our instance"
-    type = string
-    default = "ami-0bb84b8ffd87024d8"
-}
-
 variable "td-key-name" {
     description = "The name of the keypair for the instances"
     type = string
