@@ -30,11 +30,6 @@ variable "main-vpc-id" {
     type = string
 }
 
-variable "agent-key" {
-    description = "This is the Develocity TD agent key"
-    type = string
-}
-
 variable "develocity-server" {
     description = "The URL to our Develocity server"
     type = string

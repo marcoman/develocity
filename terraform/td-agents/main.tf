@@ -53,7 +53,9 @@ resource "aws_instance" "td_agents" {
     wget https://docs.gradle.com/develocity/test-distribution-agent/develocity-jar/develocity-test-distribution-agent-3.0.1.jar -O td-agent.jar
     chown ec2-user td-agent.jar
     mv td-agent.jar /home/ec2-user
-    java -Xms64m -Xmx64m -XX:MaxMetaspaceSize=64m \
+    export JDK17=/usr/lib/jvm/java-17-amazon-corretto.x86_64
+    export JDK21=/usr/lib/jvm/java-21-amazon-corretto
+    /usr/lib/jvm/java-21-amazon-corretto/bin/java -Xms64m -Xmx64m -XX:MaxMetaspaceSize=64m \
     -jar /home/ec2-user/td-agent.jar \
     --server ${var.develocity-server} \
     --registration-key ${var.develocity-registration-key} \
@@ -89,7 +91,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
     ip_protocol = "tcp"
 }
 
-resource "aws_vpc_security_group_egress_rule" "allow_ssh" {
+resource "aws_vpc_security_group_egress_rule" "allow_egress" {
     security_group_id = aws_security_group.allow_td.id
     from_port = 0
     to_port = 0
