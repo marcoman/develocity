@@ -13,7 +13,7 @@ data "aws_ami" "amazon2" {
     filter {
         name = "name"
         # values = ["amzn2-ami-hvm-*-x86_64-ebs"]
-        values = ["al2023-ami-2023-*-x86_64"]
+        values = ["al2023-ami-2023*-x86_64"]
     }
     owners = ["amazon"]
 }
@@ -55,9 +55,9 @@ resource "aws_instance" "td_agents" {
     mv td-agent.jar /home/ec2-user
     java -Xms64m -Xmx64m -XX:MaxMetaspaceSize=64m \
     -jar /home/ec2-user/td-agent.jar \
-    --server https://«develocity-hostname» \
-    --registration-key «registration-key» 
-    --pool «pool-id»
+    --server ${var.develocity-server} \
+    --registration-key ${var.develocity-registration-key} \
+    --pool ${var.develocity-td-pool}
     EOF
 
     tags = merge (

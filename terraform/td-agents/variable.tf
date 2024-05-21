@@ -35,6 +35,21 @@ variable "agent-key" {
     type = string
 }
 
+variable "develocity-server" {
+    description = "The URL to our Develocity server"
+    type = string
+}
+
+variable "develocity-registration-key" {
+    description = "The TD registration key, passed to the -registry-key"
+    type = string
+}
+
+variable "develocity-td-pool" {
+    description = "The Develocity Pool identifier"
+    type = string
+}
+
 output "td_agent_address" {
     value = aws_instance.td_agents.public_dns
 }
