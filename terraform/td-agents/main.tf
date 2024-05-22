@@ -47,7 +47,8 @@ resource "aws_instance" "td_agents" {
     #!/bin/bash
     until ping -c1 8.8.8.8 &>/dev/null; do :; done
     echo "YUM Update"
-    yum update -y
+    yum clean all
+    yum update -y --skip-broken
 
     echo "INSTALL: YUM Java 17"
     yum -y install java-17-amazon-corretto-devel
