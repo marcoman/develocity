@@ -45,14 +45,23 @@ resource "aws_instance" "td_agents" {
 
     user_data = <<-EOF
     #!/bin/bash
+    until ping -c1 8.8.8.8 &>/dev/null; do :; done
+    echo "YUM Update"
     yum update -y
-    echo "Hello world!"
+
+    echo "INSTALL: YUM Java 17"
     yum -y install java-17-amazon-corretto-devel
+
     # Java 21 is not available for AWS Linux 2.
+    echo "INSTALL: YUM Java 21"
     yum -y install java-21-amazon-corretto-devel
+
+    echo "INSTALL: Get Develocity Agent"
     wget https://docs.gradle.com/develocity/test-distribution-agent/develocity-jar/develocity-test-distribution-agent-3.0.1.jar -O td-agent.jar
     chown ec2-user td-agent.jar
     mv td-agent.jar /home/ec2-user
+
+    echo "INSTALL: Setup envvars"
     export JDK17=/usr/lib/jvm/java-17-amazon-corretto.x86_64
     export JDK21=/usr/lib/jvm/java-21-amazon-corretto
     /usr/lib/jvm/java-21-amazon-corretto/bin/java -Xms64m -Xmx64m -XX:MaxMetaspaceSize=64m \
