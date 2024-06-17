@@ -98,7 +98,7 @@ resource "aws_ecs_task_definition" "td_agent" {
             environment = [
                 {
                     name = "TEST_DISTRIBUTION_AGENT_POOL"
-                    value = "4mxe3fd3"
+                    value = "${var.develocity-td-pool}"
                 },
                 {
                     name = "TEST_DISTRIBUTION_AGENT_SERVER"
@@ -106,7 +106,7 @@ resource "aws_ecs_task_definition" "td_agent" {
                 },
                 {
                     name = "TEST_DISTRIBUTION_AGENT_REGISTRATION_KEY"
-                    value = "gw4grcgjj25q2oqv37ofd6oosigliahf2zev7v5doa2ykikytzma"
+                    value = "${var.develocity-registration-key}"
                 }
             ]
         }
@@ -115,7 +115,7 @@ resource "aws_ecs_task_definition" "td_agent" {
 
 resource "aws_ecs_service" "ecs_service" {
     name = "pse-td-agent"
-    cluster = aws_ecs_cluster.my_cluster.id
+    cluster = aws_ecs_cluster.pse_cluster.id
     task_definition = aws_ecs_task_definition.td_agent.arn
     desired_count = 2
     force_new_deployment = true
