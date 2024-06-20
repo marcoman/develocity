@@ -7,9 +7,9 @@ resource "aws_launch_template" "ecs_lt" {
   key_name               = "presales-develocity"
   vpc_security_group_ids = [aws_security_group.security_group.id]
 
-  # iam_instance_profile {
-  #   name = "ecsInstanceRole"
-  # }
+  iam_instance_profile {
+    name = aws_iam_instance_profile.role_profile.name
+  }
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -47,6 +47,34 @@ resource "aws_autoscaling_group" "ecs_asg" {
     value               = true
     propagate_at_launch = true
   }
+}
+
+resource "aws_iam_role" "pse-ecs-role" {
+  name = "pse-ecs-role"
+  assume_role_policy = <<EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  }
+  EOF
+}
+
+resource "aws_iam_role_policy_attachment" "role_attachment" {
+  role = aws_iam_role.pse-ecs-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_instance_profile" "role_profile" {
+  name = "pse-ecs-iprofile"
+  role = aws_iam_role.pse-ecs-role.name
 }
 
 

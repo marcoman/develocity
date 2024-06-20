@@ -85,7 +85,7 @@ resource "aws_ecs_cluster_capacity_providers" "example" {
 resource "aws_ecs_task_definition" "td_agent" {
   family                   = "develocity-td-agent-tf"
   network_mode             = "awsvpc"
-  execution_role_arn       = "arn:aws:iam::112104134845:role/ecsTaskExe3cutionRole"
+  execution_role_arn       = "arn:aws:iam::112104134845:role/ecsTaskExecutionRole"
   cpu                      = "1024"
   memory                   = "3072"
   requires_compatibilities = ["FARGATE"]
