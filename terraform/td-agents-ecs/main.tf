@@ -55,19 +55,47 @@ resource "aws_vpc_security_group_egress_rule" "allow_egress" {
   cidr_ipv4         = var.td-cidr-egress
 }
 
+resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
+  name = "td-agent-provider"
+
+  auto_scaling_group_provider {
+    auto_scaling_group_arn = aws_autoscaling_group.ecs_asg.arn
+
+    managed_scaling {
+      maximum_scaling_step_size = 1000
+      minimum_scaling_step_size = 1
+      status                    = "ENABLED"
+      target_capacity           = 3
+    }
+  }
+}
+
+resource "aws_ecs_cluster_capacity_providers" "example" {
+  cluster_name = aws_ecs_cluster.pse_cluster.name
+
+  capacity_providers = [aws_ecs_capacity_provider.ecs_capacity_provider.name]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
+  }
+}
+
 resource "aws_ecs_task_definition" "td_agent" {
   family                   = "develocity-td-agent-tf"
+  network_mode             = "awsvpc"
+  execution_role_arn       = "arn:aws:iam::112104134845:role/ecsTaskExe3cutionRole"
+  cpu                      = "1024"
+  memory                   = "3072"
   requires_compatibilities = ["FARGATE"]
 
-  network_mode       = "awsvpc"
-  cpu                = "1024"
-  memory             = "3072"
-  execution_role_arn = "arn:aws:iam::112104134845:role/ecsTaskExe3cutionRole"
 
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   }
+
   tags = merge(
     local.common_tags,
     {
@@ -113,8 +141,6 @@ resource "aws_ecs_task_definition" "td_agent" {
   ])
 }
 
-
-
 resource "aws_ecs_service" "ecs_service" {
   name                 = "pse-td-agent"
   cluster              = aws_ecs_cluster.pse_cluster.id
@@ -127,5 +153,24 @@ resource "aws_ecs_service" "ecs_service" {
   triggers = {
     redeployment = timestamp()
   }
+  network_configuration {
+    subnets         = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
+    security_groups = [aws_security_group.security_group.id]
+  }
+  placement_constraints {
+    type = "distinctInstance"
+  }
+  capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
+    weight            = 100
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.ecs_tg.arn
+    container_name   = "develocity-test-distribution-agent"
+    container_port   = 80
+  }
+
+  depends_on = [aws_autoscaling_group.ecs_asg]
 
 }
