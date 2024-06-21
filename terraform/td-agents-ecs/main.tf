@@ -147,18 +147,17 @@ resource "aws_ecs_service" "ecs_service" {
   task_definition      = aws_ecs_task_definition.td_agent.arn
   desired_count        = 2
   force_new_deployment = true
+
+  network_configuration {
+    subnets         = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
+    security_groups = [aws_security_group.security_group.id]
+  }
+
   placement_constraints {
     type = "distinctInstance"
   }
   triggers = {
     redeployment = timestamp()
-  }
-  network_configuration {
-    subnets         = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
-    security_groups = [aws_security_group.security_group.id]
-  }
-  placement_constraints {
-    type = "distinctInstance"
   }
   capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
@@ -172,5 +171,4 @@ resource "aws_ecs_service" "ecs_service" {
   }
 
   depends_on = [aws_autoscaling_group.ecs_asg]
-
 }

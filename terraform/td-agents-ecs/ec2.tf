@@ -2,7 +2,7 @@ resource "aws_launch_template" "ecs_lt" {
   name_prefix = "ecs-template"
   # I selected an Amazon Linux 2023 image in us-east-1
   image_id      = "ami-08a0d1e16fc3f61ea"
-  instance_type = "t3.micro"
+  instance_type = "t3.large"
 
   key_name               = "presales-develocity"
   vpc_security_group_ids = [aws_security_group.security_group.id]
