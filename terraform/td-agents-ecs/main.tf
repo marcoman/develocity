@@ -90,10 +90,9 @@ resource "aws_ecs_task_definition" "td_agent" {
   memory                   = "3072"
   requires_compatibilities = ["FARGATE"]
 
-
   runtime_platform {
     operating_system_family = "LINUX"
-    cpu_architecture        = "X86_64"
+    cpu_architecture        = "Xmanua86_64"
   }
 
   tags = merge(
@@ -106,7 +105,7 @@ resource "aws_ecs_task_definition" "td_agent" {
     {
       name      = "develocity-test-distribution-agent"
       image     = "gradle/develocity-test-distribution-agent:3.0.1"
-      cpu       = 1024
+      cpu       = 0
       memory    = 3072
       essential = true
       portMappings = [
