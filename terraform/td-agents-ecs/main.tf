@@ -92,7 +92,7 @@ resource "aws_ecs_task_definition" "td_agent" {
 
   runtime_platform {
     operating_system_family = "LINUX"
-    cpu_architecture        = "Xmanua86_64"
+    cpu_architecture        = "X86_64"
   }
 
   tags = merge(
