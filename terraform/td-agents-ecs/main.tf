@@ -78,7 +78,7 @@ resource "aws_ecs_cluster_capacity_providers" "example" {
   default_capacity_provider_strategy {
     base              = 1
     weight            = 100
-    capacity_provider = aws_ecs_capacity_provider.ecs_capacity_provider.name
+    capacity_provider = "FARGATE"
   }
 }
 
