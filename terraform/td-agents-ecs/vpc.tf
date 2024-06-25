@@ -22,9 +22,12 @@ resource "aws_subnet" "subnet2" {
 
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.main.id
-  tags = {
-    Name = "internet_gateway"
-  }
+    tags = merge(
+      local.common_tags,
+      {
+        "Name" = "internet-gateway"
+      }
+  )
 }
 
 resource "aws_route_table" "route_table" {
@@ -50,4 +53,14 @@ resource "aws_security_group" "security_group" {
   vpc_id = aws_vpc.main.id
 }
 
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
+  security_group_id = aws_security_group.security_group.id
+  cidr_ipv4         = var.td-cidr-ingress
+  ip_protocol       = "-1"
+}
 
+resource "aws_vpc_security_group_egress_rule" "allow_egress" {
+  security_group_id = aws_security_group.security_group.id
+  cidr_ipv4         = var.td-cidr-egress
+  ip_protocol       = "-1"
+}

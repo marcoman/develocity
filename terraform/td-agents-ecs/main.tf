@@ -57,35 +57,6 @@ resource "aws_ecs_cluster" "pse_cluster" {
   )
 }
 
-resource "aws_security_group" "allow_td" {
-  description = "Specify what is allowed on a TD Agent"
-  name        = "allow_td"
-  vpc_id      = var.main-vpc-id
-
-  tags = merge(
-    local.common_tags,
-    {
-      "Name" = "allow_td"
-    }
-  )
-}
-
-# resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
-#   security_group_id = aws_security_group.allow_td.id
-#   cidr_ipv4         = var.td-cidr-ingress
-#   from_port         = 22
-#   to_port           = 22
-#   ip_protocol       = "tcp"
-# }
-
-# resource "aws_vpc_security_group_egress_rule" "allow_egress" {
-#   security_group_id = aws_security_group.allow_td.id
-#   from_port         = 80
-#   to_port           = 80
-#   ip_protocol       = "tcp"
-#   cidr_ipv4         = var.td-cidr-egress
-# }
-
 # resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
 #   name = "td-agent-provider"
 
@@ -215,6 +186,7 @@ resource "aws_ecs_service" "ecs_service" {
   network_configuration {
     subnets         = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
     security_groups = [aws_security_group.security_group.id]
+    assign_public_ip = true
   }
 
   # placement_constraints {
