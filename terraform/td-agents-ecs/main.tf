@@ -1,3 +1,5 @@
+# Comments are partly informative for me, and partly direction to you to fill-in-the-blank where necessary.
+
 terraform {
   required_providers {
     aws = {
@@ -15,6 +17,7 @@ locals {
     created-for  = "Marco Morales"
     created-with = "terraform"
   }
+  # TODO: Probably don't need the following anymore.
   ingress_cidrs = var.td-cidr-ingress
 }
 
@@ -23,7 +26,7 @@ provider "aws" {
 }
 
 resource "aws_kms_key" "pse-td-key" {
-  description = "PSE CW key"
+  description             = "PSE CW key"
   deletion_window_in_days = 7
 }
 
@@ -34,17 +37,17 @@ resource "aws_cloudwatch_log_group" "pse-cloudwatch" {
 resource "aws_ecs_cluster" "pse_cluster" {
   name = "pse-td-agent-cluster" # Name your cluster here
   setting {
-    name = "containerInsights"
+    name  = "containerInsights"
     value = "enabled"
   }
   configuration {
     execute_command_configuration {
       kms_key_id = aws_kms_key.pse-td-key.arn
-      logging = "OVERRIDE"
- 
+      logging    = "OVERRIDE"
+
       log_configuration {
         cloud_watch_encryption_enabled = true
-        cloud_watch_log_group_name = aws_cloudwatch_log_group.pse-cloudwatch.name
+        cloud_watch_log_group_name     = aws_cloudwatch_log_group.pse-cloudwatch.name
       }
     }
   }
@@ -56,6 +59,7 @@ resource "aws_ecs_cluster" "pse_cluster" {
     }
   )
 }
+
 
 # resource "aws_ecs_capacity_provider" "ecs_capacity_provider" {
 #   name = "td-agent-provider"
@@ -139,34 +143,34 @@ resource "aws_ecs_task_definition" "td_agent" {
           value = "${var.develocity-registration-key}"
         }
       ],
-      
+
       requiresAttributes = [
-          {
-              name = "com.amazonaws.ecs.capability.logging-driver.awslogs"
-          },
-          {
-              name = "ecs.capability.execution-role-awslogs"
-          },
-          {
-              name = "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-          },
-          {
-              name = "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-          },
-          {
-              name = "ecs.capability.task-eni"
-          },
-          {
-              name = "com.amazonaws.ecs.capability.docker-remote-api.1.29"
-          }
+        {
+          name = "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+          name = "ecs.capability.execution-role-awslogs"
+        },
+        {
+          name = "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+          name = "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+          name = "ecs.capability.task-eni"
+        },
+        {
+          name = "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
       ],
 
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group = aws_cloudwatch_log_group.pse-cloudwatch.name
-          awslogs-create-group = "true"
-          awslogs-region = "us-east-1"
+          awslogs-group         = aws_cloudwatch_log_group.pse-cloudwatch.name
+          awslogs-create-group  = "true"
+          awslogs-region        = "us-east-1"
           awslogs-stream-prefix = "ecs"
         }
         secretOptions = []
@@ -184,8 +188,8 @@ resource "aws_ecs_service" "ecs_service" {
   force_new_deployment = true
 
   network_configuration {
-    subnets         = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
-    security_groups = [aws_security_group.security_group.id]
+    subnets          = [aws_subnet.subnet.id, aws_subnet.subnet2.id]
+    security_groups  = [aws_security_group.security_group.id]
     assign_public_ip = true
   }
 
@@ -207,11 +211,10 @@ resource "aws_ecs_service" "ecs_service" {
   # }
 
   # depends_on = [aws_autoscaling_group.ecs_asg]
-    tags = merge(
+  tags = merge(
     local.common_tags,
     {
       "Name" = "td-ecs-agent-service"
     }
   )
-
 }

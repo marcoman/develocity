@@ -22,11 +22,11 @@ resource "aws_subnet" "subnet2" {
 
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.main.id
-    tags = merge(
-      local.common_tags,
-      {
-        "Name" = "internet-gateway"
-      }
+  tags = merge(
+    local.common_tags,
+    {
+      "Name" = "internet-gateway"
+    }
   )
 }
 

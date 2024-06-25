@@ -50,7 +50,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
 }
 
 resource "aws_iam_role" "pse-ecs-role" {
-  name = "pse-ecs-role"
+  name               = "pse-ecs-role"
   assume_role_policy = <<EOF
   {
     "Version": "2012-10-17",
@@ -68,7 +68,7 @@ resource "aws_iam_role" "pse-ecs-role" {
 }
 
 resource "aws_iam_role_policy_attachment" "role_attachment" {
-  role = aws_iam_role.pse-ecs-role.name
+  role       = aws_iam_role.pse-ecs-role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
