@@ -204,6 +204,11 @@ resource "aws_ecs_service" "ecs_service" {
   #   weight            = 100
   # }
 
+  # TODO: Figure out the right way to autoscale this agent based on CPU, not the port.
+  # I'm thinking https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_policy and/or
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/appautoscaling_target
+  # Will help me figure out the right way to autoscale.
+
   # load_balancer {
   #   target_group_arn = aws_lb_target_group.ecs_tg.arn
   #   container_name   = "develocity-test-distribution-agent"

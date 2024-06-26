@@ -1,3 +1,4 @@
+# TODO: At this time, this variable is not used in the TF scripts.
 variable "aws-profile" {
   description = "The name of the aws profile to use.  You will have to modify the terraform to use this profile.  At present it is absent."
   type        = string
